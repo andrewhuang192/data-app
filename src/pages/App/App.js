@@ -15,7 +15,7 @@ export default function App() {
 	const [user, setUser] = useState(getUser());
 	const [users, setUsers] = useState([]);
 
-	// get our connection to the socket.io server
+	// // get our connection to the socket.io server
 	// var socket = io();
 	// console.log(socket)
 	
@@ -41,6 +41,7 @@ export default function App() {
 		
 		return (
 			<main className='App'>
+				
 			{user ? (
 				<>
 					<NavBar user={user} setUser={setUser} />

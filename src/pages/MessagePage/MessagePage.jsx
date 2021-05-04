@@ -1,10 +1,13 @@
 import React from 'react';
 import { useState, useRef, useEffect } from "react";
+import {Paper, TextField, Button} from "@material-ui/core";
 // import { getUsers } from '../../utilities/users-service';
 import * as messagesAPI from '../../utilities/messages-api';
 import * as usersService from '../../utilities/users-service';
 import ConversationList from '../../Components/ConversationList/ConversationList';
 import ConversationBox from '../../Components/ConversationBox/ConversationBox';
+import useChat from '../../UseChatRoom';
+import clsx from "clsx";
 
 import './MessagePage.css';
 
@@ -13,6 +16,11 @@ export default function MessagePage({user, users}) {
 	// eslint-disable-next-line
 	const [messageItems, setMessageItems] = useState([]);
 	const [inputBox, setInputBox] = useState("");
+	const { messages, sendMessage } = useChat();
+	const { owner, setOwner } = useState([]);
+	const { guest, setGuest } = useState([]);
+	const [newMessage, setNewMessage] = useState("");
+	const messageRef = useRef()
 	
 	const usersRef = useRef([]);
 
@@ -31,6 +39,29 @@ export default function MessagePage({user, users}) {
 	async function handleCheckToken() {
 		usersService.checkToken();
 	}
+
+	const handleNewMessageChange = event => {
+		setNewMessage(event.target.value);
+	  };
+	
+	  const handleSendMessage = () => {
+		if (newMessage !== "") {
+		  sendMessage(newMessage);
+		  setNewMessage("");
+		}
+	  };
+	
+	  const handleKeyUp = event => {
+		if (event.key === "Enter"){
+		  if (newMessage !== "") {
+			sendMessage(newMessage);
+			setNewMessage("");
+		  }
+		}
+	  }
+
+	  useEffect(() => messageRef.current.scrollIntoView({behavior: "smooth"}))
+
 
 	useEffect(function () {
 		async function getMessages() {
@@ -68,20 +99,44 @@ export default function MessagePage({user, users}) {
 							user={user}
 							messageItems={messageItems.filter((message) => message.conversation._id === activeConversation)}
 						/>
-						<ul id="messages"></ul>
-						<label>Message:</label>
-						<input
-							type='text'
-							name='name'
-							// value={inputMessage}
-							onChange={handleChange}
-							required
-						/>
-						<button type='submit' className='btn btn-lg'>
-							SEND
-						</button>
-						<script src="/socket.io/socket.io.js"></script>
-    					<script src="/src/pages/App/App.js"></script>
+						<div className="container">
+							<Paper elevation={5} className='paper'>
+								<div className="messageContainer">
+								<ol className="ol">
+									{messages.map((message, i) => (
+									<li
+										key={i}
+										className={clsx(message, message.isOwner ? owner : guest)}
+									>
+										<span>{message.body}</span>
+									</li>
+									))}
+								</ol>
+								<div ref={messageRef}></div>
+								</div>
+								<div className="action">
+								<TextField
+									className="messageInput"
+									id="message"
+									label="Message"
+									placeholder="enter message here"
+									variant="outlined"
+									value={newMessage}
+									onChange={handleNewMessageChange}
+									onKeyUp={handleKeyUp}
+								/>
+								<Button
+									disabled={!newMessage}
+									variant="contained"
+									color="primary"
+									onClick={handleSendMessage}
+									className="sendButton"
+								>
+									Send
+								</Button>
+								</div>
+							</Paper>
+							</div>
 			</form>
 			
     	</main>

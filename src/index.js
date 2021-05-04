@@ -8,7 +8,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
         <script src="/socket.io/socket.io.js"></script>
-    		<script src="/src/pages/App/App.js"></script>
+    		<script src="/src/server.js"></script>
         <App />
     </Router>
   </React.StrictMode>,

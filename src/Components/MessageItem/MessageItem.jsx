@@ -3,14 +3,14 @@ import "./MessageItem.css";
 export default function MessageItem({ messageItem }) {
   return (
   <tbody className="messageItem">
-        <tr>
+            <tr>
           
-            <td className="name">{messageItem.sender}</td>
-            <td className="timestamp">{messageItem.createdAt}</td>
+                    <td className="name">{messageItem.sender}</td>
+                    <td className="timestamp">{messageItem.createdAt}</td>
             </tr>
             <tr>
-            <td></td>
-            <td className="textmessage">{messageItem.message}</td>
+                    <td></td>
+                    <td className="textmessage">{messageItem.message}</td>
             </tr>
         </tbody>
 
